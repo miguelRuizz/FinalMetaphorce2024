@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mongodbcatalogos:
+    image: mongo:latest
+    container_name: mongodbcatalogos
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admincatalogos
+      MONGO_INITDB_ROOT_PASSWORD: 123
+      MONGO_INITDB_DATABASE: pfCatalogos
+    ports:
+      - "27021:27017"
+    volumes:
+      - mongodbcatalogos-data:/data/db
+
+  app:
+    build: .
+    depends_on:
+      - mongodbcatalogos
+    ports:
+      - "8086:8086"
+
+volumes:
+  mongodbcatalogos-data:
