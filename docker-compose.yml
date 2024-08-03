@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: adminjuegos
+      MONGO_INITDB_ROOT_PASSWORD: 123
+      MONGO_INITDB_DATABASE: pfJugadores
+    ports:
+      - "27020:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - app-network
+
+  mongodbcatalogos:
+    image: mongo:latest
+    container_name: mongodbcatalogos
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admincatalogos
+      MONGO_INITDB_ROOT_PASSWORD: 123
+      MONGO_INITDB_DATABASE: pfCatalogos
+    ports:
+      - "27021:27017"
+    volumes:
+      - mongodbcatalogos-data:/data/db
+    networks:
+      - app-network
+
+  mongodbbitacora:
+    image: mongo:latest
+    container_name: mongodbbitacora
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: adminbitacora
+      MONGO_INITDB_ROOT_PASSWORD: 123
+      MONGO_INITDB_DATABASE: pfBitacora
+    ports:
+      - "27022:27017"
+    volumes:
+      - mongodbbitacora-data:/data/db
+    networks:
+      - app-network
+
+  jugadores-app:
+    image: jugadores-app
+    container_name: jugadores-app
+    depends_on:
+      - mongodb
+    ports:
+      - "8085:8085"
+    networks:
+      - app-network
+
+  catalogos-app:
+    image: catalogos-app
+    container_name: catalogos-app
+    depends_on:
+      - mongodbcatalogos
+    ports:
+      - "8086:8086"
+    networks:
+      - app-network
+
+  bitacora-app:
+    image: bitacora-app
+    container_name: bitacora-app
+    depends_on:
+      - mongodbbitacora
+    ports:
+      - "8088:8088"
+    networks:
+      - app-network
+
+  api-gateway:
+    image: api-gateway
+    container_name: api-gateway
+    ports:
+      - "8087:8087"
+    depends_on:
+      - jugadores-app
+      - catalogos-app
+      - bitacora-app
+    networks:
+      - app-network
+
+volumes:
+  mongodb-data:
+  mongodbcatalogos-data:
+  mongodbbitacora-data:
+
+networks:
+  app-network:
+    driver: bridge

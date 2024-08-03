@@ -1,0 +1,30 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: servidor
+
+  cloud:
+    gateway:
+      routes:
+        - id: jugadores-app
+          uri: http://jugadores-app:8085
+          predicates:
+            - Path=/jugadores/**
+        - id: catalogos-app
+          uri: http://catalogos-app:8086
+          predicates:
+            - Path=/videojuegos/**, /consolas/**
+        - id: bitacora-app
+          uri: http://bitacora-app:8088
+          predicates:
+            - Path=/bitacoras/**
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.ipc.netty: DEBUG
+    reactor.netty: DEBUG
