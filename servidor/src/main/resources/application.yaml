@@ -4,6 +4,13 @@ server:
 spring:
   application:
     name: servidor
+  main:
+    allow-bean-definition-overriding: true
+
+  security:
+    user:
+      name: admin
+      password: admin123
 
   cloud:
     gateway:
@@ -26,5 +33,6 @@ logging:
     org.springframework.cloud.gateway: TRACE
     org.springframework.http.server.reactive: DEBUG
     org.springframework.web.reactive: DEBUG
+    org.springframework.security: DEBUG
     reactor.ipc.netty: DEBUG
     reactor.netty: DEBUG
